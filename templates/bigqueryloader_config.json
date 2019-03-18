@@ -1,0 +1,24 @@
+{
+    "schema": "iglu:com.snowplowanalytics.snowplow.storage/bigquery_config/jsonschema/1-0-0",
+    "data": {
+        "name": "Snowplow Page View Data",
+        "id": "%UUID%",
+
+        "projectId": "activate-snowplow-demo",
+        "datasetId": "snowplow",
+        "tableId": "pageviews",
+
+        "input": "enriched-good-sub",
+        "typesTopic": "bq-types",
+        "typesSubscription": "bq-types-sub",
+        "badRows": "bq-bad-rows",
+        "failedInserts": "bq-failed-inserts",
+
+        "load": {
+            "mode": "STREAMING_INSERTS",
+            "retry": false
+        },
+
+        "purpose": "ENRICHED_EVENTS"
+    }
+}
