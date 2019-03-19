@@ -1,4 +1,4 @@
-etl_start.sh
-etl_stop.sh
+start_etl.sh
+stop_etl.sh
 configs
 auth.json
