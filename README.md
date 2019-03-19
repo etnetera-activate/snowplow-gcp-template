@@ -1,30 +1,31 @@
 # Template for semi-automatic Snowplow deployment to Google Cloud
 
-This repo contains semi automatic tools for instaling snowplow to GoogleCloudPlatform. It follows great tutorial from Simo Ahava
+This repo contains semi automatic tools for instaling snowplow to GoogleCloudPlatform. It automated tasks from a great tutorial from Simo Ahava
 https://www.simoahava.com/analytics/install-snowplow-on-the-google-cloud-platform/
 
-You should read his article and you can use this scripts to automate most of steps.
+You should read Simo's article first to get some overview about whole Snowplow GCP ecosystem. All scripts have been tested on Debian runing in Windows 10 Linux Subsystem.
 
 ## Prepare
 First make some steps from tutorial.
 
 1. Prepare Google Cloud Project and enable billing. Remember *project-id*
-2. Enable apis PUB/SUB, Compute, Dataflow
-3. Create service account, download auth.json and remember service acount email
+2. Enable apis *PUB/SUB*, *Compute*, *Dataflow*
+3. Create service account, download auth.json and remember service *service-acount-email*
+   
+Following steps are optional. You can skip them if you already use gcloud command line tools.
 4. Install gcloud (https://cloud.google.com/sdk/docs/#deb)
 5. Init gcloud command line. Run `gcloud init`
 6. Init bigquery commad line. Run `bq init`
 
 ## Install this template
 
-Get template from git
-
+Get template from git 
 ```
-git clone ...
+git clone https://github.com/etnetera-activate/snowplow-gcp-template.git
 cd snowplow-gcp-template
 ```
 
-Run `./install.sh` for instaling package for generating UUID.
+Run `./install.sh` for instaling package for generating UUID and jq JSON parser
 
 ## Use this template
 
@@ -45,7 +46,8 @@ The ETL process is quite expensive as is utilize Google Dataflow. You should sta
 
 Simple use `./start_etl.sh` and `./stop_etl.sh` for this purpose.
 
-`./start_etl.sh` creates new virtual machine which runs bigquery mutator and which starts enrich and load dataflow. After you run it you can check running instances using:
+`./start_etl.sh` creates new virtual machine, which runs bigquery mutator and which starts two dataflows (one for enrich and second for bigquery inserts). 
+After you run it you can check running instances using:
 
 `gcloud compute instances list`
 
@@ -53,8 +55,8 @@ After some time, you should see:
 
 * snowplow-collector-xxx instance (one or more depending on group autoscale settings)
 * snowplow-etl
-* some machine for beam dataflow
-* some mechine for load dataflow
+* some machine started for beam dataflow 
+* some machine started for load dataflow
 
 You can anso check dataflows using
 
