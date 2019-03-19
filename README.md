@@ -13,9 +13,10 @@ First make some steps from tutorial.
 3. Create service account, download auth.json and remember service *service-acount-email*
    
 Following steps are optional. You can skip them if you already use gcloud command line tools.
-4. Install gcloud (https://cloud.google.com/sdk/docs/#deb)
-5. Init gcloud command line. Run `gcloud init`
-6. Init bigquery commad line. Run `bq init`
+
+* Install gcloud (https://cloud.google.com/sdk/docs/#deb)
+* Init gcloud command line. Run `gcloud init`
+* Init bigquery commad line. Run `bq init`
 
 ## Install this template
 
