@@ -29,9 +29,9 @@ Run `./install.sh` for instaling package for generating UUID and jq JSON parser
 
 ## Use this template
 
-Edit `./gcloud-config.sh` . Replace PRIJECTID, SERVICEACCOUNT and you can change ZONE and REGION if you wish.
+Edit `./gcloud-config.sh` . Replace PROJECTID and SERVICEACCOUNT. You can change ZONE and REGION if you wish. The region should have dataflow endpoint (https://cloud.google.com/dataflow/docs/concepts/regional-endpoints)
 
-Then run `./gcloud-config.sh`. This script will:
+Then run `./gcloud-config.sh`. This script will do most of the work:
 
 1. Prepare some config files and start/stop script for ETL.
 2. Create all pubsub topics and subscribers
@@ -39,7 +39,8 @@ Then run `./gcloud-config.sh`. This script will:
 4. Create big query dataset
 5. Create instance template for collector and create collector group
 
-Until script finish you should manually configure firewall. 
+After script finish, you should manually configure firewall and setup javascript tracker manualy.
+https://www.simoahava.com/analytics/install-snowplow-on-the-google-cloud-platform/#step-3-create-a-load-balancer
 
 ## START / STOP ETL
 The ETL process is quite expensive as is utilize Google Dataflow. You should start in only for short time and then kill it.
