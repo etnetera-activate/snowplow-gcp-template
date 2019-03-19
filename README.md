@@ -5,7 +5,7 @@ https://www.simoahava.com/analytics/install-snowplow-on-the-google-cloud-platfor
 
 You should read Simo's article first to get some overview about whole Snowplow GCP ecosystem. All scripts have been tested on Debian runing in Windows 10 Linux Subsystem.
 
-## Prepare
+## Prepare Google cloud project and command line utils
 First make some steps from tutorial.
 
 1. Prepare Google Cloud Project and enable billing. Remember *project-id*
