@@ -9,7 +9,7 @@ You should read his article and you can use this scripts to automate most of ste
 First make some steps from tutorial.
 
 1. Prepare Google Cloud Project and enable billing. Remember *project-id*
-2. Enable apis 
+2. Enable apis PUB/SUB, Compute, Dataflow
 3. Create service account, download auth.json and remember service acount email
 4. Install gcloud (https://cloud.google.com/sdk/docs/#deb)
 5. Init gcloud command line. Run `gcloud init`

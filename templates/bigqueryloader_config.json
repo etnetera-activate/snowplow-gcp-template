@@ -4,7 +4,7 @@
         "name": "Snowplow Page View Data",
         "id": "%UUID%",
 
-        "projectId": "activate-snowplow-demo",
+        "projectId": "%PROJECTID%",
         "datasetId": "snowplow",
         "tableId": "pageviews",
 

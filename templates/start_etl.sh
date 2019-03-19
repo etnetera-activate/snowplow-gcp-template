@@ -6,7 +6,7 @@ PROJECTID="%PROJECTID%"
 gcloud config set project $PROJECTID
 
 gcloud compute instances create snowplow-load \
-    --machine-type=f1-micro \
+    --machine-type=n1-standard-1 \
     --subnet=default --network-tier=PREMIUM \
     --metadata-from-file=startup-script=./configs/beam-and-bigqueryloader-startup.sh \
     --maintenance-policy=MIGRATE --service-account=${SERVICEACCOUNT} \
@@ -14,3 +14,14 @@ gcloud compute instances create snowplow-load \
     --tags=etl,http-server,https-server --image=debian-9-stretch-v20190312 --image-project=debian-cloud \
     --boot-disk-size=10GB --boot-disk-type=pd-standard --boot-disk-device-name=snowplow-load
 
+
+echo "[info] etl machine started. Wait until beam-enrich and bigquery_load starts dataflow. Cca. 5-10minutes"
+echo "[test] gcloud dataflow jobs list"
+echo "[test] gcloud compute instances list"
+echo "[test] gcloud dataflow jobs list"
+echo "[test] bq ls snowplow"
+echo "[test] gcloud pubsub subscriptions pull --auto-ack enriched-good-sub-test"
+echo "[test] bq query \"SELECT * from snowplow.pageviews LIMIT 100\""
+
+echo "[warning] Running dataflow and ETL server will cost you cca. 15USD daily!"
+echo "[warning] You can stop and delete it anytime using ./stop_etl.sh"
