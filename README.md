@@ -5,7 +5,7 @@ https://www.simoahava.com/analytics/install-snowplow-on-the-google-cloud-platfor
 
 You should read Simo's article first to get some overview about whole Snowplow GCP ecosystem. All scripts have been tested on Debian runing in Windows 10 Linux Subsystem.
 
-## Prepare
+## Prepare Google cloud project and command line utils
 First make some steps from tutorial.
 
 1. Prepare Google Cloud Project and enable billing. Remember *project-id*
@@ -13,9 +13,10 @@ First make some steps from tutorial.
 3. Create service account, download auth.json and remember service *service-acount-email*
    
 Following steps are optional. You can skip them if you already use gcloud command line tools.
-4. Install gcloud (https://cloud.google.com/sdk/docs/#deb)
-5. Init gcloud command line. Run `gcloud init`
-6. Init bigquery commad line. Run `bq init`
+
+* Install gcloud (https://cloud.google.com/sdk/docs/#deb)
+* Init gcloud command line. Run `gcloud init`
+* Init bigquery commad line. Run `bq init`
 
 ## Install this template
 
@@ -29,10 +30,16 @@ Run `./install.sh` for instaling package for generating UUID and jq JSON parser
 
 ## Use this template
 
+<<<<<<< HEAD
 Edit `./gcloud-config-mustr.sh` . Replace PROJECTID, SERVICEACCOUNT and you can change ZONE and REGION if you wish.
 Save as `./gcloud-config.sh`.
 
 Then run `./gcloud-init-project.sh`. This script will:
+=======
+Edit `./gcloud-config.sh` . Replace PROJECTID and SERVICEACCOUNT. You can change ZONE and REGION if you wish. The region should have dataflow endpoint (https://cloud.google.com/dataflow/docs/concepts/regional-endpoints)
+
+Then run `./gcloud-config.sh`. This script will do most of the work:
+>>>>>>> 94c8cb6cd4b457aa4c9de1d895a570584aa65d9f
 
 1. Prepare some config files and start/stop script for ETL.
 2. Create all pubsub topics and subscribers
@@ -40,7 +47,8 @@ Then run `./gcloud-init-project.sh`. This script will:
 4. Create big query dataset
 5. Create instance template for collector and create collector group
 
-Until script finish you should manually configure firewall. 
+After script finish, you should manually configure firewall and setup javascript tracker manualy.
+https://www.simoahava.com/analytics/install-snowplow-on-the-google-cloud-platform/#step-3-create-a-load-balancer
 
 ## START / STOP ETL
 The ETL process is quite expensive as is utilize Google Dataflow. You should start in only for short time and then kill it.
