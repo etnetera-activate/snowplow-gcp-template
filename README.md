@@ -29,9 +29,10 @@ Run `./install.sh` for instaling package for generating UUID and jq JSON parser
 
 ## Use this template
 
-Edit `./gcloud-config.sh` . Replace PRIJECTID, SERVICEACCOUNT and you can change ZONE and REGION if you wish.
+Edit `./gcloud-config-mustr.sh` . Replace PROJECTID, SERVICEACCOUNT and you can change ZONE and REGION if you wish.
+Save as `./gcloud-config.sh`.
 
-Then run `./gcloud-config.sh`. This script will:
+Then run `./gcloud-init-project.sh`. This script will:
 
 1. Prepare some config files and start/stop script for ETL.
 2. Create all pubsub topics and subscribers

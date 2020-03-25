@@ -1,18 +1,12 @@
 #!/bin/bash 
 
-### CONFIG ###########################################################
-GCP_NAME="temp-snowplow-1"
-SERVICEACCOUNT="temp-snowplow-1@temp-snowplow-1.iam.gserviceaccount.com"
+# Init whole project. Creates colector instances, BQ, pubsubs, cloud storage etc.
+# You have to finish the process manualy by configuring load balancer
 
-# region must be have dafaflow endpoint
-# https://cloud.google.com/dataflow/docs/concepts/regional-endpoints
-ZONE="europe-west1-b"
-REGION="europe-west1"           
-######################################################################
+source "gcloud-config.sh"
+echo "[start] Prapering $GCP_NAME"
 
 UUID=$(uuidgen)
-GS_BUCKET_PREFIX=$GCP_NAME
-TEMP_BUCKET="gs://${GS_BUCKET_PREFIX}-temp"
 
 gcloud config set project $GCP_NAME
 
@@ -31,37 +25,35 @@ do
     > ../configs/$file
 done
 cd ..
-mv ./configs/start_etl.sh .
-mv ./configs/stop_etl.sh .
 
 echo "[info] Cresting PUB/SUB topics and subscriptions"
 #collector pubsub
-gcloud alpha pubsub topics create good
-gcloud alpha pubsub topics create bad
-gcloud pubsub subscriptions create "good-sub" --topic="good"
-gcloud pubsub subscriptions create "bad-sub" --topic="bad"
+gcloud alpha pubsub topics create "collected-good" --message-storage-policy-allowed-regions="$REGION"
+gcloud alpha pubsub topics create "collected-bad" --message-storage-policy-allowed-regions="$REGION"
+gcloud pubsub subscriptions create "collected-good-sub" --topic="collected-good" --expiration-period=365d
+gcloud pubsub subscriptions create "collected-bad-sub" --topic="collected-bad" --expiration-period=365d
 
 #enriched pubsub
-gcloud alpha pubsub topics create enriched-bad
-gcloud alpha pubsub topics create enriched-good
-gcloud alpha pubsub topics create enriched-pii
+gcloud alpha pubsub topics create enriched-bad --message-storage-policy-allowed-regions="$REGION"
+gcloud alpha pubsub topics create enriched-good --message-storage-policy-allowed-regions="$REGION"
+gcloud alpha pubsub topics create enriched-pii --message-storage-policy-allowed-regions="$REGION"
 
-gcloud pubsub subscriptions create "enriched-good-sub" --topic="enriched-good"
-gcloud pubsub subscriptions create "enriched-bad-sub" --topic="enriched-bad"
-gcloud pubsub subscriptions create "enriched-pii-sub" --topic="enriched-pii"
+gcloud pubsub subscriptions create "enriched-good-sub" --topic="enriched-good" --expiration-period=365d
+gcloud pubsub subscriptions create "enriched-bad-sub" --topic="enriched-bad" --expiration-period=365d
+gcloud pubsub subscriptions create "enriched-pii-sub" --topic="enriched-pii" --expiration-period=365d
 
 #bigquery
-gcloud alpha pubsub topics create bq-bad-rows
-gcloud alpha pubsub topics create bq-failed-inserts
-gcloud alpha pubsub topics create bq-types
+gcloud alpha pubsub topics create bq-bad-rows --message-storage-policy-allowed-regions="$REGION"
+gcloud alpha pubsub topics create bq-failed-inserts --message-storage-policy-allowed-regions="$REGION"
+gcloud alpha pubsub topics create bq-types --message-storage-policy-allowed-regions="$REGION"
 
-gcloud pubsub subscriptions create "bq-types-sub" --topic="bq-types"
-gcloud pubsub subscriptions create "bq-bad-rows-sub" --topic="bq-bad-rows"
-gcloud pubsub subscriptions create "bq-failed-inserts" --topic="bq-failed-inserts"
+gcloud pubsub subscriptions create "bq-types-sub" --topic="bq-types" --expiration-period=365d
+gcloud pubsub subscriptions create "bq-bad-rows-sub" --topic="bq-bad-rows" --expiration-period=365d
+gcloud pubsub subscriptions create "bq-failed-inserts" --topic="bq-failed-inserts" --expiration-period=365d
 
 #test subscriptions
-gcloud pubsub subscriptions create "good-sub-test" --topic="good"
-gcloud pubsub subscriptions create "enriched-good-sub-test" --topic="enriched-good"
+gcloud pubsub subscriptions create "collected-good-sub-test" --topic="collected-good" --expiration-period=365d
+gcloud pubsub subscriptions create "enriched-good-sub-test" --topic="enriched-good" --expiration-period=365d
 
 echo "[info] Creating temp bucket $TEMP_BUCKET for confugurations"
 #prepare temp buckets for configurations
@@ -85,15 +77,15 @@ bq --location=EU mk "$GCP_NAME:snowplow"
 # collector instances template
 echo "[info] Preparing compute instance group machine template"
 gcloud compute instance-templates create snowplow-collector-template \
-    --machine-type=f1-micro \
+    --machine-type=${COLLECTOR_MACHINE_TYPE} \
     --network=projects/${GCP_NAME}/global/networks/default \
     --network-tier=PREMIUM \
     --metadata-from-file=startup-script=./configs/collector_startup.sh \
     --maintenance-policy=MIGRATE --service-account=$SERVICEACCOUNT \
     --scopes=https://www.googleapis.com/auth/pubsub,https://www.googleapis.com/auth/servicecontrol,https://www.googleapis.com/auth/service.management.readonly,https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/trace.append,https://www.googleapis.com/auth/devstorage.read_only \
     --tags=collector,http-server,https-server \
-    --image=debian-9-stretch-v20190312 \
-    --image-project=debian-cloud \
+    --image=${IMAGE} \
+    --image-project=${IMAGE_PROJECT} \
     --boot-disk-size=10GB \
     --boot-disk-type=pd-standard \
     --boot-disk-device-name=snowplow-collector-template

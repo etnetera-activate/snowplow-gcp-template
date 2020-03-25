@@ -1,12 +1,12 @@
 {
     "schema": "iglu:com.snowplowanalytics.snowplow.storage/bigquery_config/jsonschema/1-0-0",
     "data": {
-        "name": "Snowplow Page View Data",
+        "name": "Snowplow events View Data - TEST ENV",
         "id": "%UUID%",
 
         "projectId": "%PROJECTID%",
         "datasetId": "snowplow",
-        "tableId": "pageviews",
+        "tableId": "events",
 
         "input": "enriched-good-sub",
         "typesTopic": "bq-types",
