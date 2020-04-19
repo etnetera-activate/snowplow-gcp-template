@@ -30,16 +30,10 @@ Run `./install.sh` for instaling package for generating UUID and jq JSON parser
 
 ## Use this template
 
-<<<<<<< HEAD
 Edit `./gcloud-config-mustr.sh` . Replace PROJECTID, SERVICEACCOUNT and you can change ZONE and REGION if you wish.
 Save as `./gcloud-config.sh`.
 
 Then run `./gcloud-init-project.sh`. This script will:
-=======
-Edit `./gcloud-config.sh` . Replace PROJECTID and SERVICEACCOUNT. You can change ZONE and REGION if you wish. The region should have dataflow endpoint (https://cloud.google.com/dataflow/docs/concepts/regional-endpoints)
-
-Then run `./gcloud-config.sh`. This script will do most of the work:
->>>>>>> 94c8cb6cd4b457aa4c9de1d895a570584aa65d9f
 
 1. Prepare some config files and start/stop script for ETL.
 2. Create all pubsub topics and subscribers
