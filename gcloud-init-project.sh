@@ -3,8 +3,8 @@
 # Init whole project. Creates colector instances, BQ, pubsubs, cloud storage etc.
 # You have to finish the process manualy by configuring load balancer
 
-source "gcloud-config.sh"
-echo "[start] Prapering $GCP_NAME"
+source "./gcloud-config.sh"
+echo "[start] Preparing $GCP_NAME"
 
 UUID=$(uuidgen)
 
