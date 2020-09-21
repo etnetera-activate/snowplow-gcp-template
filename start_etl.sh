@@ -8,6 +8,7 @@ echo "PROJECT ID: $GCP_NAME"
 gcloud config set project $GCP_NAME
 
 gcloud compute instances create orchestrator \
+    --zone=${ZONE}\
     --machine-type=${ETL_MACHINE_TYPE}\
     --subnet=default --network-tier=PREMIUM \
     --metadata-from-file=startup-script=./configs/beam-and-bigqueryloader-startup.sh \
