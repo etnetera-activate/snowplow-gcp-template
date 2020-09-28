@@ -12,7 +12,7 @@ gcloud config set project $GCP_NAME
 gcloud dataflow jobs drain --region $REGION `gcloud dataflow jobs list --region=$REGION | grep Running | tail -n 1 | cut -f 1 -d " "`
 gcloud dataflow jobs drain --region $REGION `gcloud dataflow jobs list --region=$REGION | grep Running | head -n 1 | cut -f 1 -d " "`
 
-gcloud --quiet compute instances delete orchestrator
+gcloud --quiet compute instances delete orchestrator --zone $ZONE
 
 #and check it
 gcloud dataflow jobs list

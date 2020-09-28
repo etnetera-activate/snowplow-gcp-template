@@ -1,9 +1,12 @@
 #!/bin/bash
-enrich_version="1.1.0"
-bq_version="0.4.0"
-TEMP_BUCKET="%TEMPBUCKET%"
-project_id="%PROJECTID%"
-region="%REGION%"
+export enrich_version="1.1.0"
+export bq_version="0.4.0"
+
+# Values should be updated manually
+export project_id="xxxx-yyyy-1234"
+export TEMP_BUCKET=gs://$project_id-temp
+export region="europe-west1"
+export service_account=test-service-account@xxxx-yyyy-1234.iam.gserviceaccount.com
 
 sudo apt-get update
 sudo apt-get -y install default-jre
@@ -35,7 +38,8 @@ gsutil cp  ${TEMP_BUCKET}/config/bigqueryloader_config.json .
     --enriched=projects/$project_id/topics/enriched-good \
     --bad=projects/$project_id/topics/enriched-bad \
     --pii=projects/$project_id/topics/enriched-pii \
-    --resolver=iglu_config.json
+    --resolver=iglu_config.json \
+    --serviceAccount=$service_account
 
 #create tables
 ./snowplow-bigquery-mutator-$bq_version/bin/snowplow-bigquery-mutator create --config $(cat bigqueryloader_config.json | base64 -w 0) --resolver $(cat iglu_config.json | base64 -w 0)
